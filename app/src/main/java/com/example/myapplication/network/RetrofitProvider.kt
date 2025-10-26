@@ -1,0 +1,29 @@
+package com.example.myapplication.network
+
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+object RetrofitProvider {
+
+    private val client by lazy {
+        val logger = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+        OkHttpClient.Builder()
+            .addInterceptor(logger)
+            .build()
+    }
+
+    val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8080/") // emulador Android -> localhost backend
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    fun <T> create(service: Class<T>): T = retrofit.create(service)
+    inline fun <reified T> create(): T = retrofit.create(T::class.java)
+}
