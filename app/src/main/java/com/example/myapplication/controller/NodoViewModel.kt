@@ -38,5 +38,4 @@ class NodoViewModel : ViewModel() {
         }
     }
 
-    fun obtenerUltimoNodo(): Nodo? = state.value.list.lastOrNull()
 }
