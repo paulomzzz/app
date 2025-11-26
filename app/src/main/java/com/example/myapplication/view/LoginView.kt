@@ -130,6 +130,15 @@ fun LoginView(navController: NavHostController) {
                     color = if (state.loginExitoso) Color(0xFF2E7D32) else Color.Red
                 )
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { navController.navigate("qr") },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Escanear QR del GitHub")
+            }
+
         }
     }
 }
