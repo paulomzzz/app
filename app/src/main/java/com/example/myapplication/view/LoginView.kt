@@ -26,12 +26,12 @@ fun LoginView(navController: NavHostController) {
 
     val context = LocalContext.current
 
-    // 🔹 Al abrir pantalla → cargar usuario guardado
+    // abre la pantalla → carga el usuario guardado
     LaunchedEffect(Unit) {
         viewModel.cargarUsuarioGuardado(context)
     }
 
-    // 🔹 Navegar después del login
+    // Navegar después del login
     LaunchedEffect(state.loginExitoso) {
         if (state.loginExitoso) {
             delay(1500)
@@ -49,7 +49,7 @@ fun LoginView(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Spacer(modifier = Modifier.height(80.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         Image(
             painter = painterResource(id = R.drawable.platmo),
