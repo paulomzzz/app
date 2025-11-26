@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -19,14 +20,21 @@ import com.example.myapplication.R
 
 @Composable
 fun LoginView(navController: NavHostController) {
+
     val viewModel: LoginViewModel = viewModel()
     val state by viewModel.state.collectAsState()
 
+    val context = LocalContext.current
 
-// Navega tras login exitoso
+    // 🔹 Al abrir pantalla → cargar usuario guardado
+    LaunchedEffect(Unit) {
+        viewModel.cargarUsuarioGuardado(context)
+    }
+
+    // 🔹 Navegar después del login
     LaunchedEffect(state.loginExitoso) {
         if (state.loginExitoso) {
-            delay(3000)
+            delay(1500)
             navController.navigate("nodos") {
                 popUpTo("login") { inclusive = true }
             }
@@ -39,26 +47,20 @@ fun LoginView(navController: NavHostController) {
             .background(Color(0xFFF5F5F5))
             .padding(40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top // 👈 logo arriba
+        verticalArrangement = Arrangement.Top
     ) {
-        Spacer(modifier = Modifier.height(100.dp)) // margen superior
+        Spacer(modifier = Modifier.height(80.dp))
 
-        //  Logo de Platmo arriba del formulario
         Image(
             painter = painterResource(id = R.drawable.platmo),
             contentDescription = "Logo de Platmo",
-            modifier = Modifier
-
-                .padding(bottom = 32.dp)
+            modifier = Modifier.padding(bottom = 32.dp)
         )
 
-        // Centra el resto del contenido más abajo
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxWidth()
         ) {
-
             Text("Iniciar Sesión", style = MaterialTheme.typography.titleLarge)
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -80,10 +82,23 @@ fun LoginView(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // 🔹 CASILLA "Recordar usuario"
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = state.recordarUsuario,
+                    onCheckedChange = { viewModel.onRecordarChange(it) }
+                )
+                Text("Recordar usuario")
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { viewModel.login() },
+                onClick = { viewModel.login(context) },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isLoading
             ) {
@@ -99,12 +114,10 @@ fun LoginView(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón para crear cuenta
             TextButton(onClick = { navController.navigate("registro") }) {
                 Text("Crear cuenta")
             }
 
-            // Botón para “Quiénes somos”
             TextButton(onClick = { navController.navigate("quienes") }) {
                 Text("Quiénes somos")
             }
@@ -119,6 +132,4 @@ fun LoginView(navController: NavHostController) {
             }
         }
     }
-
-
 }

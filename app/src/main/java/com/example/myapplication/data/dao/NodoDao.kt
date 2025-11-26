@@ -9,17 +9,12 @@ import androidx.room.Delete
 import kotlinx.coroutines.flow.Flow
 import com.example.myapplication.data.entity.NodoEntity
 
-/**
- * NodoDao (versión profesional)
- *
- * - Define operaciones sobre la tabla `nodos`.
- * - Observa datos con Flow para que la UI se actualice automáticamente.
- */
+
 @Dao
 interface NodoDao {
 
     // Inserta una lista de nodos. Si hay conflicto (mismo primary key), los reemplaza.
-    // `suspend` porque se llama desde una corrutina.
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertarNodos(nodos: List<NodoEntity>)
 

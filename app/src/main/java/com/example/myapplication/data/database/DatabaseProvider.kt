@@ -10,11 +10,15 @@ object DatabaseProvider {
 
     fun getDatabase(context: Context): PlatmoDatabase {
         return INSTANCE ?: synchronized(this) {
+
             val instance = Room.databaseBuilder(
                 context.applicationContext,
                 PlatmoDatabase::class.java,
                 "platmo_db"
-            ).build()
+            )
+                .fallbackToDestructiveMigration() // 👈 EVITA CRASHES AL CAMBIAR VERSIONES
+                .build()
+
             INSTANCE = instance
             instance
         }
